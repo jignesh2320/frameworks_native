@@ -85,7 +85,7 @@ void BlurFilter::drawBlurRegion(SkCanvas* canvas, const SkRRect& effectRegion,
 
     const auto blurMatrix = getShaderTransform(canvas, blurRect, kInverseInputScale);
     SkSamplingOptions linearSampling(SkFilterMode::kLinear, SkMipmapMode::kNone);
-    const auto blurShader = blurredImage->makeShader(SkTileMode::kMirror, SkTileMode::kMirror,
+    const auto blurShader = blurredImage->makeShader(SkTileMode::kClamp, SkTileMode::kClamp,
                                                      linearSampling, &blurMatrix);
 
     if (blurRadius < mMaxCrossFadeRadius) {
@@ -99,7 +99,7 @@ void BlurFilter::drawBlurRegion(SkCanvas* canvas, const SkRRect& effectRegion,
         SkRuntimeShaderBuilder blurBuilder(mMixEffect);
         blurBuilder.child("blurredInput") = blurShader;
         blurBuilder.child("originalInput") =
-                input->makeShader(SkTileMode::kMirror, SkTileMode::kMirror, linearSampling,
+                input->makeShader(SkTileMode::kClamp, SkTileMode::kClamp, linearSampling,
                                   inputMatrix);
         blurBuilder.uniform("mixFactor") = blurRadius / mMaxCrossFadeRadius;
 
